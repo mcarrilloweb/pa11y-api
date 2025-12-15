@@ -1,49 +1,40 @@
+// server.js
 const express = require('express');
 const pa11y = require('pa11y');
-const puppeteer = require('puppeteer');
 
 const app = express();
+const PORT = process.env.PORT || 10000;
+
+// Middleware pour parser le JSON
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-
-// Endpoint POST /run pour exécuter un audit Pa11y
+// POST /run : lance un audit Pa11y
 app.post('/run', async (req, res) => {
-  const { url } = req.body;
+    const { url } = req.body;
 
-  if (!url) {
-    return res.status(400).json({ error: 'Missing URL' });
-  }
+    if (!url) {
+        return res.json({ error: 'Missing URL' });
+    }
 
-  try {
-    const results = await pa11y(url, {
-  standard: 'WCAG2AA',
-  timeout: 30000,
-  chromeLaunchConfig: {
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  }
-});
+    try {
+        const results = await pa11y(url, {
+            standard: 'WCAG2AA',
+            timeout: 30000,
+            chromeLaunchConfig: {
+                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            }
+        });
 
-    res.json({
-      url,
-      issues: results.issues,
-      count: results.issues.length
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: 'Pa11y audit failed',
-      message: error.message
-    });
-  }
-});
-
-// Endpoint GET / pour vérifier que le serveur tourne
-app.get('/', (req, res) => {
-  res.send('Pa11y API is running');
+        res.json({
+            url,
+            count: results.issues.length,
+            issues: results.issues
+        });
+    } catch (err) {
+        res.json({ error: 'Pa11y audit failed', message: err.message });
+    }
 });
 
 // Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Pa11y API running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Pa11y API running on port ${PORT}`));
