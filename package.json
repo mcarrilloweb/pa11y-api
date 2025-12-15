@@ -1,16 +1,3 @@
-{
-  "name": "pa11y-api",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Simple Pa11y API for WordPress",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "pa11y": "^9.0.1"
-  }
-}
 "dependencies": {
     "axe-core": "~4.10.3",
     "bfj": "~9.1.2",
@@ -24,3 +11,17 @@
     "semver": "~7.7.1",
     "cors": "^2.8.5"
 }
+{
+  "name": "pa11y-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simple Pa11y API for WordPress",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pa11y": "^9.0.1"
+  }
+}
+
