@@ -1,24 +1,20 @@
-// server.js
 const express = require('express');
-const cors = require('cors');  // <-- on importe cors
+const cors = require('cors');  // Middleware CORS
 const pa11y = require('pa11y');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// 1️⃣ Activer CORS pour toutes les requêtes
+// 1️⃣ Autoriser toutes les origines
 app.use(cors());
 
 // 2️⃣ Parser le JSON
 app.use(express.json());
 
-// 3️⃣ Route POST /run pour lancer l'audit
+// 3️⃣ POST /run pour lancer l'audit
 app.post('/run', async (req, res) => {
     const { url } = req.body;
-
-    if (!url) {
-        return res.json({ error: 'Missing URL' });
-    }
+    if (!url) return res.json({ error: 'Missing URL' });
 
     try {
         const results = await pa11y(url, {
@@ -40,10 +36,10 @@ app.post('/run', async (req, res) => {
     }
 });
 
-// 4️⃣ Route GET / pour info
+// 4️⃣ GET / pour tester l’API
 app.get('/', (req, res) => {
     res.send('Pa11y API is running. Use POST /run with {"url":"..."} to audit a page.');
 });
 
-// 5️⃣ Démarrer le serveur
+// 5️⃣ Lancer le serveur
 app.listen(PORT, () => console.log(`Pa11y API running on port ${PORT}`));
