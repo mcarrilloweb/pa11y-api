@@ -17,7 +17,6 @@ app.post('/run', async (req, res) => {
             standard: 'WCAG2AA',
             timeout: 30000,
             chromeLaunchConfig: {
-                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
             }
         });
