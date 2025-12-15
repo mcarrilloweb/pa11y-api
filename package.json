@@ -1,0 +1,12 @@
+{
+  "name": "pa11y-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pa11y": "^9.0.1"
+  }
+}
