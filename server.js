@@ -1,6 +1,18 @@
 // server.js
 const express = require('express');
+const cors = require('cors');
 const pa11y = require('pa11y');
+
+// CORS
+app.use(cors());
+
+// Pour les données JSON
+app.use(express.json());
+
+// Route de test
+app.post('/run', (req, res) => {
+    // Ton code de l'audit ici
+});
 
 const app = express();
 const PORT = process.env.PORT || 10000;
