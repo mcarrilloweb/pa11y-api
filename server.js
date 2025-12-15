@@ -7,20 +7,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// Configurer le cache Puppeteer pour Render
-const browserFetcher = puppeteer.createBrowserFetcher({
-  path: process.env.PUPPETEER_CACHE_DIR || puppeteer.defaultDownloadPath()
-});
-
-// Fonction pour récupérer le chemin de Chrome
-const getChromePath = async () => {
-  const localRevisions = await browserFetcher.localRevisions();
-  if (!localRevisions.length) {
-    throw new Error('No Chrome revisions found. Run `npx puppeteer browsers install chrome`.');
-  }
-  return browserFetcher.revisionInfo(localRevisions[0]).executablePath;
-};
-
 // Endpoint POST /run pour exécuter un audit Pa11y
 app.post('/run', async (req, res) => {
   const { url } = req.body;
@@ -30,13 +16,11 @@ app.post('/run', async (req, res) => {
   }
 
   try {
-    const chromePath = await getChromePath();
-
     const results = await pa11y(url, {
       standard: 'WCAG2AA',
       timeout: 30000,
       chromeLaunchConfig: {
-        executablePath: chromePath,
+        // Puppeteer sait utiliser le Chrome téléchargé automatiquement
         args: ['--no-sandbox', '--disable-setuid-sandbox']
       }
     });
