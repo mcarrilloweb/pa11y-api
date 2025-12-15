@@ -17,13 +17,13 @@ app.post('/run', async (req, res) => {
 
   try {
     const results = await pa11y(url, {
-      standard: 'WCAG2AA',
-      timeout: 30000,
-      chromeLaunchConfig: {
-        // Puppeteer sait utiliser le Chrome téléchargé automatiquement
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-      }
-    });
+  standard: 'WCAG2AA',
+  timeout: 30000,
+  chromeLaunchConfig: {
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  }
+});
 
     res.json({
       url,
