@@ -16,6 +16,7 @@ app.post('/run', async (req, res) => {
         const results = await pa11y(url, {
             standard: 'WCAG2AA',
             timeout: 30000,
+            // on supprime executablePath
             chromeLaunchConfig: {
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
             }
