@@ -2,6 +2,7 @@
   "name": "pa11y-api",
   "version": "1.0.0",
   "private": true,
+  "description": "Simple Pa11y API for WordPress",
   "scripts": {
     "start": "node server.js"
   },
