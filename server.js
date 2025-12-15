@@ -7,11 +7,12 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// Configure Puppeteer cache pour Render
+// Configurer le cache Puppeteer pour Render
 const browserFetcher = puppeteer.createBrowserFetcher({
   path: process.env.PUPPETEER_CACHE_DIR || puppeteer.defaultDownloadPath()
 });
 
+// Fonction pour récupérer le chemin de Chrome
 const getChromePath = async () => {
   const localRevisions = await browserFetcher.localRevisions();
   if (!localRevisions.length) {
@@ -20,7 +21,7 @@ const getChromePath = async () => {
   return browserFetcher.revisionInfo(localRevisions[0]).executablePath;
 };
 
-// Endpoint pour exécuter un audit Pa11y
+// Endpoint POST /run pour exécuter un audit Pa11y
 app.post('/run', async (req, res) => {
   const { url } = req.body;
 
@@ -53,7 +54,7 @@ app.post('/run', async (req, res) => {
   }
 });
 
-// Endpoint racine pour vérifier que le serveur tourne
+// Endpoint GET / pour vérifier que le serveur tourne
 app.get('/', (req, res) => {
   res.send('Pa11y API is running');
 });
