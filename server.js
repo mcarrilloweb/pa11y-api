@@ -1,11 +1,26 @@
 const express = require('express');
 const pa11y = require('pa11y');
+const puppeteer = require('puppeteer');
 
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// Configure Puppeteer cache pour Render
+const browserFetcher = puppeteer.createBrowserFetcher({
+  path: process.env.PUPPETEER_CACHE_DIR || puppeteer.defaultDownloadPath()
+});
+
+const getChromePath = async () => {
+  const localRevisions = await browserFetcher.localRevisions();
+  if (!localRevisions.length) {
+    throw new Error('No Chrome revisions found. Run `npx puppeteer browsers install chrome`.');
+  }
+  return browserFetcher.revisionInfo(localRevisions[0]).executablePath;
+};
+
+// Endpoint pour exécuter un audit Pa11y
 app.post('/run', async (req, res) => {
   const { url } = req.body;
 
@@ -14,10 +29,13 @@ app.post('/run', async (req, res) => {
   }
 
   try {
+    const chromePath = await getChromePath();
+
     const results = await pa11y(url, {
       standard: 'WCAG2AA',
       timeout: 30000,
       chromeLaunchConfig: {
+        executablePath: chromePath,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
       }
     });
@@ -35,10 +53,12 @@ app.post('/run', async (req, res) => {
   }
 });
 
+// Endpoint racine pour vérifier que le serveur tourne
 app.get('/', (req, res) => {
   res.send('Pa11y API is running');
 });
 
+// Démarrage du serveur
 app.listen(PORT, () => {
   console.log(`Pa11y API running on port ${PORT}`);
 });
